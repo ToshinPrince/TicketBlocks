@@ -6,12 +6,16 @@ const SYMBOL = "TB";
 
 describe("TicketBlocks", () => {
   let ticketBlocks;
+  let deployer, buyer;
 
   beforeEach(async () => {
+    [deployer, buyer] = await ethers.getSigners();
+
     const TicketBlocks = await ethers.getContractFactory("TicketBlocks");
     ticketBlocks = await TicketBlocks.deploy(NAME, SYMBOL);
   });
 
+  // Deployment
   describe("Deployment", () => {
     it("Sets the name", async () => {
       let name = await ticketBlocks.name();
@@ -20,8 +24,11 @@ describe("TicketBlocks", () => {
 
     it("Sets the Symbol", async () => {
       let symbol = await ticketBlocks.symbol();
-
       expect(symbol).to.equal("TB");
+    });
+
+    it("sets the Owner", async () => {
+      expect(await ticketBlocks.owner()).to.equal(deployer.address);
     });
   });
 });
