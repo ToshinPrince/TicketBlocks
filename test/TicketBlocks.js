@@ -87,4 +87,16 @@ describe("TicketBlocks", () => {
       expect(occasion.location).to.be.equal(OCCASION_LOCATION);
     });
   });
+
+  // describe("minting", () => {
+  //   const ID = 1;
+  //   const SEAT = 60;
+  //   const AMOUNT = ethers.utils.parseUnits("1", "ether");
+
+  //   beforeEach(async () => {
+  //     const transaction = await ticketBlocks
+  //       .connect(buyer)
+  //       .mint(ID, SEAT, { value: AMOUNT });
+  //   });
+  // });
 });
