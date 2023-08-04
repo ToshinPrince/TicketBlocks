@@ -1,3 +1,4 @@
+const { toBeChecked } = require("@testing-library/jest-dom/dist/matchers");
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
@@ -88,15 +89,41 @@ describe("TicketBlocks", () => {
     });
   });
 
-  // describe("minting", () => {
-  //   const ID = 1;
-  //   const SEAT = 60;
-  //   const AMOUNT = ethers.utils.parseUnits("1", "ether");
+  describe("minting", () => {
+    const ID = 1;
+    const SEAT = 60;
+    const AMOUNT = ethers.utils.parseUnits("1", "ether");
 
-  //   beforeEach(async () => {
-  //     const transaction = await ticketBlocks
-  //       .connect(buyer)
-  //       .mint(ID, SEAT, { value: AMOUNT });
-  //   });
-  // });
+    beforeEach(async () => {
+      const transaction = await ticketBlocks
+        .connect(buyer)
+        .mint(ID, SEAT, { value: AMOUNT });
+    });
+
+    it("Updates ticket Count", async () => {
+      const occasion = await ticketBlocks.getOccasion(1);
+      expect(occasion.tickets).to.be.equal(OCCASION_MAX_TICKETS - 1);
+    });
+
+    it("Updates Buying Status", async () => {
+      const status = await ticketBlocks.hasBought(ID, buyer.address);
+      expect(status).to.be.equal(true);
+    });
+
+    it("Update seat status", async () => {
+      const owner = await ticketBlocks.seatTaken(ID, SEAT);
+      expect(owner).to.be.equal(buyer.address);
+    });
+
+    it("Updates overall seating status", async () => {
+      const seats = await ticketBlocks.getSeatsTaken(ID);
+      expect(seats.length).to.be.equal(1);
+      expect(seats[0]).to.be.equal(SEAT);
+    });
+
+    it("Updates the contract Balance", async () => {
+      const balance = await ethers.provider.getBalance(ticketBlocks.address);
+      expect(balance).to.be.equal(AMOUNT);
+    });
+  });
 });

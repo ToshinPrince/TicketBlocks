@@ -59,6 +59,17 @@ contract TicketBlocks is ERC721 {
     }
 
     function mint(uint256 _id, uint256 _seat) public payable {
+        //Require _id is not 0 or less than total occasions
+        require(_id != 0);
+        require(_id <= totalOccasions);
+
+        // Eth Send is greater than cost
+        require(msg.value >= Occasions[_id].cost);
+
+        //seat is not taken and it exists
+        require(seatTaken[_id][_seat] == address(0));
+        require(_seat <= Occasions[_id].maxTickets);
+
         Occasions[_id].tickets -= 1; //update ticket COunt
 
         hasBought[_id][msg.sender] = true; //updated Bought Status
@@ -72,5 +83,9 @@ contract TicketBlocks is ERC721 {
 
     function getOccasion(uint256 _id) public view returns (Occasion memory) {
         return Occasions[_id];
+    }
+
+    function getSeatsTaken(uint256 _id) public view returns (uint256[] memory) {
+        return seatsTaken[_id];
     }
 }
