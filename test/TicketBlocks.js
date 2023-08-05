@@ -126,4 +126,36 @@ describe("TicketBlocks", () => {
       expect(balance).to.be.equal(AMOUNT);
     });
   });
+
+  describe("withdrawing", () => {
+    const ID = 1;
+    const SEAT = 60;
+    const AMOUNT = ethers.utils.parseUnits("1", "ether");
+
+    let balanceBefore;
+    beforeEach(async () => {
+      balanceBefore = await ethers.provider.getBalance(deployer.address);
+
+      let transaction = await ticketBlocks
+        .connect(buyer)
+        .mint(ID, SEAT, { value: AMOUNT });
+      await transaction.wait();
+
+      transaction = await ticketBlocks.connect(deployer).withdraw();
+      await transaction.wait();
+    });
+
+    it("upadtes the Deployers Balance", async () => {
+      const balanceAfter = await ethers.provider.getBalance(deployer.address);
+      expect(balanceAfter).to.be.greaterThan(balanceBefore);
+    });
+
+    it("updates the Contract Balance", async () => {
+      const contractBAlance = await ethers.provider.getBalance(
+        ticketBlocks.address
+      );
+
+      expect(contractBAlance).to.be.equal(0);
+    });
+  });
 });
