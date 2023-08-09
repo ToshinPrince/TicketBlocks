@@ -15,14 +15,33 @@ import config from "./config.json";
 
 function App() {
   const [account, setAccount] = useState(null);
+  const [provider, setProvider] = useState(null);
+
+  const [ticketBlocks, setTicketBlocks] = useState(null);
+  const [occasions, setOccasions] = useState([]);
 
   const loadBlockchianData = async () => {
-    //Fetching Account - placed this in Navigation
-    // const accounts = await window.ethereum.request({
-    //   method: "eth_requestAccounts",
-    // });
-    // const account = ethers.utils.getAddress(accounts[0]);
-    // setAccount(account);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    setProvider(provider);
+
+    const network = await provider.getNetwork();
+
+    const ticketBlocks = new ethers.Contract(
+      config[network.chainId].TicketBlocks.address,
+      TicketBlocks,
+      provider
+    );
+
+    setTicketBlocks(ticketBlocks);
+
+    const totalOccasions = await ticketBlocks.totalOccasions();
+    const occasions = [];
+
+    for (var i = 0; i <= totalOccasions; i++) {
+      const occasion = await ticketBlocks.getOccasion(i);
+      occasions.push(occasion);
+    }
+    setOccasions(occasions);
 
     //Refresh Account
     window.ethereum.on("accountsChanged", async () => {
