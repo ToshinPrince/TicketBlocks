@@ -75,6 +75,10 @@ function App() {
           // <p key={index}>{occasion.name}</p>
           <Card
             occasion={occasion}
+            id={index + 1}
+            ticketBlocks={ticketBlocks}
+            provider={provider}
+            account={account}
             toggle={toggle}
             setToggle={setToggle}
             setOccasion={setOccasion}
