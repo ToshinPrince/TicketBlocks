@@ -20,6 +20,9 @@ function App() {
   const [ticketBlocks, setTicketBlocks] = useState(null);
   const [occasions, setOccasions] = useState([]);
 
+  const [occasion, setOccasion] = useState({});
+  const [toggle, setToggle] = useState(false);
+
   const loadBlockchianData = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(provider);
@@ -37,11 +40,13 @@ function App() {
     const totalOccasions = await ticketBlocks.totalOccasions();
     const occasions = [];
 
-    for (var i = 0; i <= totalOccasions; i++) {
+    for (var i = 1; i <= totalOccasions; i++) {
       const occasion = await ticketBlocks.getOccasion(i);
       occasions.push(occasion);
     }
     setOccasions(occasions);
+
+    console.log(occasions);
 
     //Refresh Account
     window.ethereum.on("accountsChanged", async () => {
@@ -65,7 +70,18 @@ function App() {
           <strong>Ticket</strong>Blocks
         </h2>
       </header>
-      <p>{account}</p>
+      <div className="cards">
+        {occasions.map((occasion, index) => (
+          // <p key={index}>{occasion.name}</p>
+          <Card
+            occasion={occasion}
+            toggle={toggle}
+            setToggle={setToggle}
+            setOccasion={setOccasion}
+            key={index}
+          />
+        ))}
+      </div>
     </div>
   );
 }
