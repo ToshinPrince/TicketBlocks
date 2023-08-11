@@ -89,6 +89,15 @@ function App() {
           />
         ))}
       </div>
+
+      {toggle && (
+        <SeatChart
+          occasion={occasion}
+          ticketBlocks={ticketBlocks}
+          provider={provider}
+          setToggle={setToggle}
+        />
+      )}
     </div>
   );
 }
