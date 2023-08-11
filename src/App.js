@@ -70,6 +70,9 @@ function App() {
           <strong>Ticket</strong>Blocks
         </h2>
       </header>
+
+      <Sort />
+
       <div className="cards">
         {occasions.map((occasion, index) => (
           // <p key={index}>{occasion.name}</p>
